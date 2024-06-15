@@ -5,11 +5,14 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { employeesMock } from "./mocks/employeesMock";
-import { Link, Typography } from "@mui/material";
+import { Link, Typography, Grid } from "@mui/material";
+import { Navigate } from "react-router-dom";
 
+import { useAuth } from "../authProvider";
 import { EmployeeDetailsDialog } from "./EmployeeDetailsDialog";
 
 export const EmployeesPage = () => {
+  const { isLoggedIn } = useAuth();
   const [employees, setEmployees] = React.useState(employeesMock);
 
   const [employeeDetailsId, setEmployeeDetailsId] = React.useState(null);
@@ -71,6 +74,10 @@ export const EmployeesPage = () => {
 
   const rows = employees;
 
+  // if (!isLoggedIn) {
+  //   return <Navigate to="/login" />;
+  // }
+
   return (
     <>
       <Breadcrumbs sx={{ marginLeft: 5 }}>
@@ -79,27 +86,31 @@ export const EmployeesPage = () => {
         </Link>
         <Typography color="textPrimary">Employees</Typography>
       </Breadcrumbs>
-      <DataGrid
-        sx={{
-          maxWidth: "90%",
-          marginLeft: "50px",
-          marginTop: "50px",
-          padding: 2,
-          color: "#5A6A85",
-          height: 403,
-        }}
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+      <Grid container spacing={2} mt={5} px={5} justifyContent={"center"}>
+        <DataGrid
+          sx={{
+            maxWidth: "90%",
+            marginLeft: "50px",
+            marginTop: "50px",
+            padding: 2,
+            color: "#5A6A85",
+            height: 403,
+            border: 0,
+            boxShadow: "0px 0px 40px rgba(0, 0, 0, 0.05)",
+          }}
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-      />
+          }}
+          pageSizeOptions={[5]}
+          disableRowSelectionOnClick
+        />
+      </Grid>
       <EmployeeDetailsDialog
         employeeDetailsId={employeeDetailsId}
         setEmployeeDetailsId={setEmployeeDetailsId}

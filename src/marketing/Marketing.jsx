@@ -6,7 +6,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import { DataGrid } from "@mui/x-data-grid";
 import { Breadcrumbs, Link } from "@mui/material";
-import { orange } from "@mui/material/colors";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../authProvider";
 
 const socialMediaStats = [
   {
@@ -108,6 +109,12 @@ const rows = [
 ];
 
 export const Marketing = () => {
+  const { isLoggedIn } = useAuth();
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
+
   return (
     <Box>
       <Breadcrumbs sx={{ marginLeft: 5, marginBottom: 2 }}>
@@ -116,7 +123,7 @@ export const Marketing = () => {
         </Link>
         <Typography color="textPrimary">Marketing</Typography>
       </Breadcrumbs>
-      <Grid container spacing={4} sx={{ justifyContent: "center" }}>
+      <Grid container spacing={2} mt={5} px={5} justifyContent={"center"}>
         {socialMediaStats.map((stat, index) => (
           <Grid item xs={2} key={index}>
             <Card sx={{ height: 150 }}>
@@ -155,6 +162,8 @@ export const Marketing = () => {
             padding: 2,
             color: "#5A6A85",
             height: 403,
+            border: 0,
+            boxShadow: "0px 0px 40px rgba(0, 0, 0, 0.05)",
           }}
           rows={rows}
           columns={columns}

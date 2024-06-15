@@ -22,6 +22,8 @@ import CellTowerIcon from "@mui/icons-material/CellTower";
 import DonutLargeOutlinedIcon from "@mui/icons-material/DonutLargeOutlined";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { Typography } from "@mui/material";
+import { useContext } from "react";
+import { ThemeContext } from "@emotion/react";
 
 const drawerWidth = 240;
 
@@ -91,9 +93,10 @@ const ListItemStyled = styled(ListItemButton)(({}) => ({
     borderRadius: "8px",
     "&:hover": {
       backgroundColor: "#ECF2FF",
+      borderRadius: "8px",
     },
     "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-      color: "#FFFFFF",
+      color: "#fff",
     },
   },
   "&:hover": {
@@ -103,9 +106,11 @@ const ListItemStyled = styled(ListItemButton)(({}) => ({
       color: "#5D87FF",
     },
   },
+
   "& .MuiListItemIcon-root": {
     color: "#5A6A85",
   },
+
   "& .MuiListItemText-primary": {
     color: "#5A6A85",
   },
@@ -130,6 +135,8 @@ const LogoContainer = styled("div")(({}) => ({
 
 export const SidebarNav = ({ open, children }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const { theme } = useContext(ThemeContext);
+  const logoColor = theme === "dark" ? "#FFFFFF" : "#000000";
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -140,11 +147,15 @@ export const SidebarNav = ({ open, children }) => {
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <LogoContainer open={open}>
+          <LogoContainer open={open} style={{ color: logoColor }}>
             <img
               src={open ? logo : logoCollapsed}
               alt="Logo"
-              style={{ height: "30px", transition: "all 0.5s ease" }}
+              style={{
+                height: "30px",
+                transition: "all 0.5s ease",
+                fill: "currentColor",
+              }}
             />
           </LogoContainer>
         </DrawerHeader>
@@ -315,30 +326,6 @@ export const SidebarNav = ({ open, children }) => {
                 <PersonAddAltOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary="Register" />
-            </ListItemStyled>
-          </HtmlTooltip>
-          <ListSubheaderStyled component="div" id="nested-list-subheader">
-            {open ? "UTILITIES" : "UTIL"}
-          </ListSubheaderStyled>
-          <HtmlTooltip
-            sx={{ display: open ? "none" : "flex" }}
-            title={
-              <React.Fragment>
-                <Typography>Reports</Typography>
-              </React.Fragment>
-            }
-            placement="right"
-          >
-            <ListItemStyled
-              component={Link}
-              to="/"
-              selected={selectedIndex === 7}
-              onClick={(event) => handleListItemClick(event, 7)}
-            >
-              <ListItemIcon>
-                <DonutLargeOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary="Reports" />
             </ListItemStyled>
           </HtmlTooltip>
         </List>

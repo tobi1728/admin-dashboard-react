@@ -12,7 +12,7 @@ export const YearlyBreakup = () => {
     labels: ["2021", "2022", "2023"],
     datasets: [
       {
-        data: [30, 40, 30], // Example data
+        data: [30, 40, 30],
         backgroundColor: [blue[700], lightBlue[400], cyan[200]],
         hoverBackgroundColor: [blue[800], lightBlue[500], cyan[300]],
         borderWidth: 0,
@@ -21,7 +21,7 @@ export const YearlyBreakup = () => {
   };
 
   const options = {
-    cutout: "70%", // Powiększ dziurę w środku donut
+    cutout: "70%",
     plugins: {
       legend: {
         display: false,

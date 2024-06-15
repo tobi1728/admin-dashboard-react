@@ -171,19 +171,31 @@ export const Profile = () => {
               </Typography>
               <Grid container spacing={4}>
                 <Grid item>
-                  <WebIcon sx={{ color: "#1976d2" }} />
+                  <WebIcon data-testid="WebIcon" sx={{ color: "#1976d2" }} />
                 </Grid>
                 <Grid item>
-                  <TwitterIcon sx={{ color: "#1da1f2" }} />
+                  <TwitterIcon
+                    data-testid="TwitterIcon"
+                    sx={{ color: "#1da1f2" }}
+                  />
                 </Grid>
                 <Grid item>
-                  <FacebookIcon sx={{ color: "#4267b2" }} />
+                  <FacebookIcon
+                    data-testid="FacebookIcon"
+                    sx={{ color: "#4267b2" }}
+                  />
                 </Grid>
                 <Grid item>
-                  <InstagramIcon sx={{ color: "#e1306c" }} />
+                  <InstagramIcon
+                    data-testid="InstagramIcon"
+                    sx={{ color: "#e1306c" }}
+                  />
                 </Grid>
                 <Grid item>
-                  <YouTubeIcon sx={{ color: "#ff0000" }} />
+                  <YouTubeIcon
+                    data-testid="YouTubeIcon"
+                    sx={{ color: "#ff0000" }}
+                  />
                 </Grid>
               </Grid>
             </CardContent>

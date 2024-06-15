@@ -1,6 +1,5 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
@@ -9,10 +8,14 @@ import DoneIcon from "@mui/icons-material/Done";
 import Tooltip from "@mui/material/Tooltip";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
+import { Grid } from "@mui/material";
+import { Navigate } from "react-router-dom";
 
+import { useAuth } from "../authProvider";
 import { ordersMock } from "./mocks/ordersMock";
 
 export const Orders = () => {
+  const { isLoggedIn } = useAuth();
   const [orders, setOrders] = React.useState(ordersMock);
 
   const capitalizeFirstLetter = (string) => {
@@ -133,6 +136,9 @@ export const Orders = () => {
 
   const rows = orders;
 
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
   return (
     <div>
       <Breadcrumbs sx={{ marginLeft: 5 }}>
@@ -141,28 +147,32 @@ export const Orders = () => {
         </Link>
         <Typography color="textPrimary">Orders</Typography>
       </Breadcrumbs>
-      <DataGrid
-        sx={{
-          maxWidth: "90%",
-          marginLeft: "50px",
-          marginTop: "50px",
-          padding: 2,
-          color: "#5A6A85",
-          height: 403,
-        }}
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+      <Grid container spacing={2} mt={5} px={5} justifyContent={"center"}>
+        <DataGrid
+          sx={{
+            maxWidth: "90%",
+            marginLeft: "50px",
+            marginTop: "50px",
+            padding: 2,
+            color: "#5A6A85",
+            height: 403,
+            border: 0,
+            boxShadow: "0px 0px 40px rgba(0, 0, 0, 0.05)",
+          }}
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
             },
-          },
-        }}
-        disableAutosize
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-      />
+          }}
+          disableAutosize
+          pageSizeOptions={[5]}
+          disableRowSelectionOnClick
+        />
+      </Grid>
     </div>
   );
 };

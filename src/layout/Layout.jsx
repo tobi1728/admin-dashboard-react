@@ -23,13 +23,13 @@ export const Layout = ({ children }) => {
     palette: {
       mode: "light",
       primary: {
-        main: "#f5f5f5", // Default primary color for light mode
+        main: "#f5f5f5",
       },
       secondary: {
         main: "#f50057",
       },
       background: {
-        default: "#ffffff", // Light background color
+        default: "#ffffff",
         paper: "#fff",
       },
       text: {
@@ -56,13 +56,13 @@ export const Layout = ({ children }) => {
     palette: {
       mode: "dark",
       primary: {
-        main: "#90caf9", // Default primary color for dark mode
+        main: "#90caf9",
       },
       secondary: {
         main: "#f50057",
       },
       background: {
-        default: "#1d1d1d", // Dark background color
+        default: "#1d1d1d",
         paper: "paper",
       },
     },

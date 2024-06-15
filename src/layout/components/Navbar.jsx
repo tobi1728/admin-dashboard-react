@@ -12,20 +12,19 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import Switch from "@mui/material/Switch";
-import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Divider from "@mui/material/Divider";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailOutline from "@mui/icons-material/MailOutline";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import ListAlt from "@mui/icons-material/ListAlt";
 import Logout from "@mui/icons-material/Logout";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-
 import { useAuth } from "../../authProvider";
+import { generateRandomNotifications } from "../../employee/mocks/notificationsMock";
+import { formatDistanceToNow } from "date-fns";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -50,7 +49,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     },
   },
   "& .MuiSwitch-thumb": {
-    backgroundColor: theme.palette.mode === "dark" ? "#003892" : "#001e3c",
+    backgroundColor: theme.palette.mode === "dark" ? "#1D1D1D" : "#001e3c",
     width: 32,
     height: 32,
     "&::before": {
@@ -122,36 +121,35 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.mode === "dark" ? "#1D1D1D" : "#fff",
   color: "#5A6A85",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  border: 0,
+  boxShadow: "0px 0px 40px rgba(0, 0, 0, 0.05)",
 }));
 
 const IconButtonStyled = styled(IconButton)(({ theme }) => ({
   width: 40,
   height: 40,
-  borderRadius: "12px",
+  borderRadius: "50%",
   display: "flex",
   alignItems: "center",
+  marginLeft: 20,
   justifyContent: "center",
   verticalAlign: "middle",
 }));
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(1),
   position: "absolute",
-  top: 45,
-  width: 400,
+  top: 47,
 }));
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   display: "flex",
-  flexDirection: "row",
-  width: 200,
-  padding: theme.spacing(1, 4),
+  marginLeft: "20px",
+  marginRight: "20px",
   fontSize: "0.9rem",
   color: "#5A6A85",
-  borderRadius: "8px",
   backgroundColor: "#fff",
   borderRadius: "8px",
   padding: 10,
@@ -160,13 +158,18 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     borderRadius: "8px",
     color: "#5D87FF",
   },
+  "& .notification-date": {
+    marginLeft: "auto",
+    fontSize: "0.8rem",
+    color: "#a0a0a0",
+  },
 }));
 
 const StyledMenuButton = styled(Button)(({ theme }) => ({
   backgroundColor: "#5d87ff",
   color: "#fff",
-  padding: "5x 15px 5px 15px",
-  margin: "5px 15px 0 15px",
+  padding: "5px 15px",
+  margin: "15px 20px 0 40px",
   borderRadius: "8px",
   textTransform: "capitalize",
   fontSize: "12px",
@@ -185,9 +188,25 @@ export const PrimarySearchAppBar = ({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNotifications, setAnchorElNotifications] =
+    React.useState(null);
+  const [notifications, setNotifications] = React.useState([]);
+  const [notificationCount, setNotificationCount] = React.useState(0);
+
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      const userNotifications = generateRandomNotifications(user);
+      setNotifications(userNotifications);
+      setNotificationCount(userNotifications.length);
+    } else {
+      setNotifications([]);
+      setNotificationCount(0);
+    }
+  }, [isLoggedIn, user]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isNotificationsMenuOpen = Boolean(anchorElNotifications);
 
   const settings = ["Profile", "Account", "Tasks", "Logout"];
   const handleProfileMenuOpen = (event) => {
@@ -201,6 +220,14 @@ export const PrimarySearchAppBar = ({
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleNotificationsMenuOpen = (event) => {
+    setAnchorElNotifications(event.currentTarget);
+  };
+
+  const handleNotificationsMenuClose = () => {
+    setAnchorElNotifications(null);
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -283,36 +310,56 @@ export const PrimarySearchAppBar = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <StyledMenuItem>
-        <IconButtonStyled
-          size="large"
-          aria-label="show 4 new mails"
-          color="inherit"
-        >
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButtonStyled>
-        <p>Messages</p>
-      </StyledMenuItem>
-      <StyledMenuItem>
-        <IconButtonStyled
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButtonStyled>
-        <p>Notifications</p>
-      </StyledMenuItem>
+      {isLoggedIn && (
+        <StyledMenuItem>
+          <IconButtonStyled
+            size="large"
+            aria-label={`show ${notificationCount} new notifications`}
+            color="inherit"
+            onClick={handleNotificationsMenuOpen}
+          >
+            <Badge badgeContent={notificationCount} color="error">
+              <NotificationsIcon />
+            </Badge>
+          </IconButtonStyled>
+          <p>Notifications</p>
+        </StyledMenuItem>
+      )}
       <StyledMenuItem onClick={handleProfileMenuOpen}>
         <IconButtonStyled onClick={handleOpenUserMenu} sx={{ p: 0 }}>
           <Avatar alt="Remy Sharp" src="/assets/images/my_photo.jpg" />
         </IconButtonStyled>
         <p>Profile</p>
       </StyledMenuItem>
+    </StyledMenu>
+  );
+
+  const renderNotificationsMenu = (
+    <StyledMenu
+      anchorEl={anchorElNotifications}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id="primary-notifications-menu"
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isNotificationsMenuOpen}
+      onClose={handleNotificationsMenuClose}
+    >
+      {notifications.map((notification, index) => (
+        <StyledMenuItem key={index}>
+          {notification.message}
+          <Typography className="notification-date">
+            {formatDistanceToNow(new Date(notification.date), {
+              addSuffix: true,
+            })}
+          </Typography>
+        </StyledMenuItem>
+      ))}
     </StyledMenu>
   );
 
@@ -343,24 +390,18 @@ export const PrimarySearchAppBar = ({
           <Box
             sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
           >
-            <IconButtonStyled
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <Badge badgeContent={3} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButtonStyled>
-            <IconButtonStyled
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButtonStyled>
+            {isLoggedIn && (
+              <IconButtonStyled
+                size="large"
+                aria-label={`show ${notificationCount} new notifications`}
+                color="inherit"
+                onClick={handleNotificationsMenuOpen}
+              >
+                <Badge badgeContent={notificationCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButtonStyled>
+            )}
             <FormControlLabel
               control={
                 <MaterialUISwitch
@@ -421,6 +462,7 @@ export const PrimarySearchAppBar = ({
       </AppBarStyled>
       {renderMobileMenu}
       {renderMenu}
+      {renderNotificationsMenu}
     </Box>
   );
 };

@@ -1,26 +1,22 @@
 import "../App.css";
 import React from "react";
-import {
-  Container,
-  Grid,
-  Card,
-  CardContent,
-  Stack,
-  Chip,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Box,
-  Paper,
-} from "@mui/material";
+import { Grid, Card, Typography, Breadcrumbs, Link, Box } from "@mui/material";
 
 import { SalesChart } from "../saleschart";
 import { YearlyBreakup } from "../piechart";
 import { MonthlyEarnings } from "../monthlyearnings";
 import { RecentTransactions } from "../recenttransactions";
 import { ProductPerformance } from "../productperformance";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../authProvider";
 
 export const Dashboard = () => {
+  const { isLoggedIn } = useAuth();
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
+
   return (
     <Box
       sx={{
@@ -33,7 +29,7 @@ export const Dashboard = () => {
         </Link>
         <Typography color="textPrimary">Dashboard</Typography>
       </Breadcrumbs>
-      <Grid container spacing={2} my={5} display={"flex"}>
+      <Grid container mt={5} justifyContent={"center"}>
         <Grid Item xs={6}>
           <SalesChart />
         </Grid>
@@ -45,6 +41,8 @@ export const Dashboard = () => {
             <MonthlyEarnings />
           </Card>
         </Grid>
+      </Grid>
+      <Grid container mt={5} justifyContent={"center"}>
         <Grid Item xs={3}>
           <Card>
             <RecentTransactions />

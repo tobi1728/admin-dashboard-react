@@ -11,7 +11,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Register the necessary chart components including the Legend for the chart
 Chart.register(
   LinearScale,
   CategoryScale,
@@ -21,8 +20,7 @@ Chart.register(
   Legend
 );
 
-// Set global default options for all charts
-Chart.defaults.font.family = "Nunito Sans"; // Setting the default font family
+Chart.defaults.font.family = "Nunito Sans";
 
 export const ChartCard = () => {
   const chartData = {
